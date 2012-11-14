@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'pp'
 
 
 #data structure used here is ruby hash
@@ -38,13 +39,19 @@ class Dict
     end
   end
 
-  def match? word
-
+  def mw? word #complete match a word
+    ! @dict[word].nil?
   end
 
-  def match_tree? word
-
-
+  def mt? word #match a tree, more word
+    wl = word.length
+    dt = @dict_tree
+    for i in 0..(wl-1)
+      dt=dt[word[i]]
+      #puts "DT: #{word}: #{dt}"
+      return false if dt.nil?
+    end
+    return dt.size > 1
   end
 
 end
@@ -55,32 +62,64 @@ end
 
 class Chopper
 
-  def initalize dict
+  def initialize dict
     @dict = dict
   end
 
   #max match
   def chop line
-    index = 0
-    last  = line.length
-    words=[]
+    i= 0
+    words_index=[]
+    words_length=[]
     wordlen = 1
-    while index<last
-      word = line[index, wordlen]
-      if match?(word)
+    matched_word = nil
+    unmatched_word = nil
 
+    while i < line.length
+      inloop = true
+      while inloop
+        try_word = line[i, wordlen]
+        if (wordlen + i) > line.length
+          i+=1
+          wordlen=1
+          break
+        end
+        if @dict.mw? try_word
+          if try_word.length > 1
+            words_index << i
+            words_length << wordlen
+            puts "#{try_word} : #{@dict.dict[try_word]}"
+
+          end
+        end
+
+        if @dict.mt? try_word #is a part of a word
+          wordlen +=1
+        else
+          inloop = false
+        end
       end
+      wordlen = 1
+      i += 1
+    end 
+    pp words_index
+    pp words_length
+    hash = []
+    for i in 0..(words_index.length-1)
+      if hash[words_index[i]].nil?
+        hash[words_index[i]]=[]
+      end
+      hash[words_index[i]] << words_length[i]
     end
 
-  end
-
-  def match? word
-    ! @dict[word].nil?
+    hash
   end
 
 
 end
 
 dict=Dict.new
-dict.load_from_file ARGV[0]
-puts dict.dict_tree
+dict.load_from_file './dict.txt'
+
+chop = Chopper.new dict
+pp chop.chop ARGV[0]
