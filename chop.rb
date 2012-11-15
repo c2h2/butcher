@@ -66,14 +66,12 @@ class Chopper
     @dict = dict
   end
 
-  #max match
+  #find all matches and record there indexes and length.
   def chop line
     i= 0
+    wordlen = 1
     words_index=[]
     words_length=[]
-    wordlen = 1
-    matched_word = nil
-    unmatched_word = nil
 
     while i < line.length
       inloop = true
@@ -93,7 +91,7 @@ class Chopper
           end
         end
 
-        if @dict.mt? try_word #is a part of a word
+        if @dict.mt? try_word
           wordlen +=1
         else
           inloop = false
@@ -102,19 +100,33 @@ class Chopper
       wordlen = 1
       i += 1
     end 
-    pp words_index
-    pp words_length
-    hash = []
+    
+    @words_array = []
     for i in 0..(words_index.length-1)
-      if hash[words_index[i]].nil?
-        hash[words_index[i]]=[]
+      if @words_array[words_index[i]].nil?
+        @words_array[words_index[i]]=[]
       end
-      hash[words_index[i]] << words_length[i]
+      @words_array[words_index[i]] << words_length[i]
     end
-
-    hash
+    @words_array
   end
 
+  def reassemble_left
+     
+
+  end
+
+  def reassemble_right
+
+  end
+  
+  def reassemble_freq
+
+  end
+
+  def reassemble_center #via both direction
+
+  end
 
 end
 
