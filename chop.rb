@@ -78,6 +78,8 @@ class Chopper
     words_index=[]
     words_length=[]
 
+    found_words=[]
+
     while i < line.length
       inloop = true
       while inloop
@@ -91,8 +93,8 @@ class Chopper
           if try_word.length > 1
             words_index << i
             words_length << wordlen
-            puts "#{try_word} : #{@dict.dict[try_word]}"
-
+            #puts "#{try_word} : #{@dict.dict[try_word]}"
+            found_words << try_word
           end
         end
 
@@ -114,6 +116,8 @@ class Chopper
       @words_array[words_index[i]] << words_length[i]
     end
     @words_array
+
+    found_words
   end
 
   def reassemble_left
