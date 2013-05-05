@@ -15,20 +15,25 @@ class Dict
     cnt = 0
     while (line = file.gets)
       elems = line.split(" ")
-      word = elems[0]
-      freq = elems[1]
+      word = elems[0] #first is word itself
+      freq = elems[1] #2nd is freq of appearnce.
+      attr = elems[2] #3rd is word attribute.
       @dict[word]=freq
 
       #make the dict tree, by walking down the branch
+      next if word.nil?
       wordlen =  word.length
       wordindex = 0
       dc = @dict_tree
+
       
       while wordlen > wordindex
         char = word[wordindex]
         if dc[char].nil?
           dc[char] = {} #new branch
-          dc[char]["_"]=freq
+          dc[char]["_"]=[freq, attr]
+        elsif !dc[char]["_"].nil?
+          #skip an existing word.
         else
           dc = dc[char] #walk the old branch
         end
