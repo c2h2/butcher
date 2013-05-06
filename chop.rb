@@ -32,8 +32,6 @@ class Dict
         if dc[char].nil?
           dc[char] = {} #new branch
           dc[char]["_"]=[freq, attr]
-        elsif !dc[char]["_"].nil?
-          #skip an existing word.
         else
           dc = dc[char] #walk the old branch
         end
