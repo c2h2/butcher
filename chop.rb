@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'pp'
 
+$min_word_len = 0  #minmal match length for a word, 0 = match anything.
 
 #data structure used here is ruby hash
 class Dict
@@ -46,12 +47,13 @@ class Dict
     ! @dict[word].nil?
   end
 
-  def mt? word #match a tree, more word
+  def mt? word #match a tree, a part of a word
     wl = word.length
     dt = @dict_tree
+    
+    #walk down the tree branch
     for i in 0..(wl-1)
       dt=dt[word[i]]
-      #puts "DT: #{word}: #{dt}"
       return false if dt.nil?
     end
     return dt.size > 1
@@ -75,35 +77,62 @@ class Chopper
     wordlen = 1
     words_index=[]
     words_length=[]
-
+    temp_word=nil
+  
     found_words=[]
 
     while i < line.length
       inloop = true
       while inloop
         try_word = line[i, wordlen]
-        if (wordlen + i) > line.length
-          i+=1
-          wordlen=1
+  
+        #try word is over the boundry of a line?
+        if (i + wordlen) > line.length           
+          # if so we reset wordlen and increment i. and go to next loop
+          i+=1; wordlen=1
           break
         end
-        if @dict.mw? try_word
-          if try_word.length > 1
-            words_index << i
-            words_length << wordlen
-            #puts "#{try_word} : #{@dict.dict[try_word]}"
-            found_words << try_word
+
+        if @dict.mw? try_word 
+          temp_word = try_word; temp_index = i; temp_length = wordlen
+          if @dict.mt? try_word
+            wordlen+=1
+            next
+          else
+            #save output
+            inloop = false
+            if !temp_word.nil?
+              found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
+              i += wordlen
+            else
+              #bad luck nothing found
+              i += 1
+            end
+            wordlen = 1
+            #end save output
+          end
+        else 
+          if @dict.mt? try_word
+            wordlen += 1
+            next
+          else
+            #save output
+            inloop = false
+            if !temp_word.nil?
+              found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
+              i += temp_length
+            else
+              #bad luck nothing found
+              i += 1
+            end
+            wordlen = 1
+            #end save output
           end
         end
 
-        if @dict.mt? try_word
-          wordlen +=1
-        else
-          inloop = false
-        end
       end
-      wordlen = 1
-      i += 1
+      #out of a loop
+    
     end 
     
     @words_array = []
