@@ -2,6 +2,10 @@
 require 'pp'
 
 $min_word_len = 0  #minmal match length for a word, 0 = match anything.
+$mongo ||= false
+$debug ||= false
+
+require './words.rb' if $mongo
 
 #data structure used here is ruby hash
 class Dict
@@ -9,6 +13,15 @@ class Dict
   def initialize
     @dict={}
     @dict_tree={}
+  end
+
+  def save_word_to_db word, freq, attr
+    w=Word.new
+    w.name = word
+    w.freq = freq
+    w.attr = attr
+    w.save
+    puts word if $debug
   end
   
   def load_from_file fn
@@ -19,14 +32,15 @@ class Dict
       word = elems[0] #first is word itself
       freq = elems[1] #2nd is freq of appearnce.
       attr = elems[2] #3rd is word attribute.
-      @dict[word]=freq
+      @dict[word]=[freq, attr]
+      save_word_to_db(word, freq, attr) if $mongo
 
       #make the dict tree, by walking down the branch
       next if word.nil?
       wordlen =  word.length
       wordindex = 0
       dc = @dict_tree
-
+     
       
       while wordlen > wordindex
         char = word[wordindex]
