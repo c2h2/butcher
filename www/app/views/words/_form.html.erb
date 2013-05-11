@@ -1,0 +1,13 @@
+<%= simple_form_for(@word) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="inputs">
+    <%= f.input :name %>
+    <%= f.input :freq %>
+    <%= f.input :attr %>
+  </div>
+
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
