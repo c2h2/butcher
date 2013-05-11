@@ -4,8 +4,14 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Freq</th>
-      <th>Attr</th>
+      <th>
+        <% if params[:sort]=="freq_asc" %>
+        <%= link_to "Freqence", "?sort=freq_desc" %>
+        <% else %>
+            <%= link_to "Freqence", "?sort=freq_asc" %>
+        <% end %>
+      </th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>
