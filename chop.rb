@@ -5,7 +5,7 @@ $min_word_len = 0  #minmal match length for a word, 0 = match anything.
 $mongo ||= false
 $debug ||= false
 
-require './words.rb' if $mongo
+require_relative "./www/app/models/word.rb" if $mongo
 
 #data structure used here is ruby hash
 class Dict
