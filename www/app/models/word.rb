@@ -5,6 +5,8 @@ class Word
   field :freq
   field :attr
 
+  index :freq => 1
+
   validates :name, :presence => true
   validates :freq, :presence => true
   validates :attr, :presence => true
