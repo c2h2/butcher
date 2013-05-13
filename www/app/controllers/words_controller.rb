@@ -5,9 +5,9 @@ class WordsController < ApplicationController
   # GET /words.json
   def index
     if params[:sort] == "freq_asc"
-      @words = Word.asc("freq").page(params[:page]).per(50)
+      @words = Word.asc("freq").page(params[:page]).per(100)
     else
-      @words = Word.desc("freq").page(params[:page]).per(50)
+      @words = Word.desc("freq").page(params[:page]).per(100)
     end
   end
 

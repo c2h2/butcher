@@ -1,20 +1,27 @@
 <h1>Listing words</h1>
+<h2>word count: <%= @words.count %></h2>
 
 <table class="table table-bordered table-striped">
   <thead>
     <tr>
-      <th>Name</th>
       <th>
-        <% if params[:sort]=="freq_asc" %>
-        <%= link_to "Freqence", "?sort=freq_desc" %>
+        <% if params[:sort]=="name_asc" %>
+          <%= link_to "Name", "?sort=name_desc" %>
         <% else %>
-            <%= link_to "Freqence", "?sort=freq_asc" %>
+          <%= link_to "Name", "?sort=name_asc" %>
         <% end %>
       </th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
+      <th>
+        <% if params[:sort]=="freq_asc" %>
+          <%= link_to "Frequency", "?sort=freq_desc" %>
+        <% else %>
+          <%= link_to "Frequency", "?sort=freq_asc" %>
+        <% end %>
+      </th>
+      <th>Attr</th>
+      <th>custom?</th>
+      <th>Attr2</th>
+      <th>Controls</th>
     </tr>
   </thead>
 
@@ -24,9 +31,9 @@
         <td><%= word.name %></td>
         <td><%= word.freq %></td>
         <td><%= word.attr %></td>
-        <td><%= link_to 'Show', word %></td>
-        <td><%= link_to 'Edit', edit_word_path(word) %></td>
-        <td><%= link_to 'Destroy', word, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= word.is_custom %></td>
+        <td><%= word.attr2 %></td>
+        <td><%= link_to 'Show', word %> <%= link_to 'Edit', edit_word_path(word) %> <%= link_to 'Destroy', word, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
