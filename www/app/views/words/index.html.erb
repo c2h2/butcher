@@ -30,7 +30,7 @@
       <tr>
         <td><%= word.name %></td>
         <td><%= word.freq %></td>
-        <td><%= word.attr %></td>
+        <td><%= word.attr+", "+word.get_attr %></td>
         <td><%= word.is_custom %></td>
         <td><%= word.attr2 %></td>
         <td><%= link_to 'Show', word %> <%= link_to 'Edit', edit_word_path(word) %> <%= link_to 'Destroy', word, method: :delete, data: { confirm: 'Are you sure?' } %></td>

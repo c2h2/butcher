@@ -12,4 +12,10 @@ class Word
   validates :name, :presence => true
   validates :freq, :presence => true
   validates :attr, :presence => true
+  
+  def get_attr
+    attr=Attr.where(:name => self.attr).first
+    return '' if attr.nil?
+    return attr.meaning
+  end
 end
