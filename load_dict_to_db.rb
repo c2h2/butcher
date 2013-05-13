@@ -1,6 +1,9 @@
+require 'mongoid'
+
+Mongoid.load!("www/config/mongoid.yml", :development)
 
 $mongo = true
-$debug = true
+$debug = false
 
 require './chop.rb'
 
