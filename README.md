@@ -7,7 +7,8 @@ butcher 屠夫中文分词
 Butcher "meat good, vegetable sucks!"
 
 
-=== Installation && Initialization ===
+Installation && Initialization
+==============================
 
     apt-get install mongodb nodejs
     git clone git://github.com/c2h2/butcher.git && cd butcher
