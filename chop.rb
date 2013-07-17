@@ -85,70 +85,67 @@ class Chopper
     @dict = dict
   end
 
-  #find all matches and record there indexes and length.
   def chop line
+    chop_basic line
+  end
+
+  #find all matches and record there indexes and length.
+  def chop_basic line
     i= 0
     wordlen = 1
     words_index=[]
     words_length=[]
-    temp_word=nil
-  
     found_words=[]
+    temp_word=nil
+    temp_length=0
 
     while i < line.length
-      inloop = true
-      while inloop
-        try_word = line[i, wordlen]
-  
-        #try word is over the boundry of a line?
-        if (i + wordlen) > line.length           
-          # if so we reset wordlen and increment i. and go to next loop
-          i+=1; wordlen=1
-          break
-        end
+      while i + wordlen <= line.length  #break if try_word over the boundry of a line
+        try_word=line[i, wordlen]
+        mt=@dict.mt? try_word
+        mw=@dict.mw? try_word
 
-        if @dict.mw? try_word 
-          temp_word = try_word; temp_index = i; temp_length = wordlen
-          if @dict.mt? try_word
-            wordlen+=1
-            next
+        if mw #if we match a word, yes-> match tree?{yes-> wordlen++ , no -> found word}, 
+          temp_word = try_word; temp_length = wordlen; temp_index=i
+          if mt
           else
-            #save output
-            inloop = false
+            #found a word, and save output
             if !temp_word.nil?
               found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
-              i += wordlen
+              i = i + wordlen - 1
+              break
             else
               #bad luck nothing found
-              i += 1
             end
-            wordlen = 1
-            #end save output
           end
-        else 
-          if @dict.mt? try_word
-            wordlen += 1
-            next
+        else  # not match a word, if match a tree, yes -> 
+          if mt
+            #not match a word, but a tree, we inc the word length
           else
-            #save output
-            inloop = false
+            #not a tree, not a word
             if !temp_word.nil?
               found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
-              i += temp_length
+              i = i + temp_length - 1
+              break
             else
               #bad luck nothing found
-              i += 1
+              break #no word, no tree #orpahn char. #TODO take care orphan
             end
-            wordlen = 1
-            #end save output
           end
-        end
-
+        end #end of big if
+        wordlen += 1
       end
-      #out of a loop
+      # if so we reset wordlen and increment i. and go to next loop
+      i+=1; wordlen=1
     
+      #end of a line, take care of last word if have
+      if !temp_word.nil?
+        found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
+        break
+      end
+      ##
     end 
-    
+
     @words_array = []
     for i in 0..(words_index.length-1)
       if @words_array[words_index[i]].nil?
@@ -163,7 +160,6 @@ class Chopper
 
   def reassemble_left
      
-
   end
 
   def reassemble_right
