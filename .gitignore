@@ -3,3 +3,4 @@
 www/tmp/cache/assets/development
 www/tmp
 www/log/*.log
+*.log
