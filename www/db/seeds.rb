@@ -1,8 +1,8 @@
 # encoding: utf-8
 start_time = Time.now
 $mongo = true
-db_file = "../../../dict.txt.big"
-attr_file = "../words_attr.txt"
+db_file = "../../../dicts/dict.txt.big"
+attr_file = "../dicts/words_attr.txt"
 
 puts "Flush old dict db."
 Word.destroy_all
