@@ -26,3 +26,6 @@ v 动词
 wp 标点符号
 ws 字符串
 x 非语素字
+ul 了
+uj 的
+f prop
