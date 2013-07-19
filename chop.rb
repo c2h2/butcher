@@ -20,6 +20,11 @@ class Dict
     @dict_tree={}
   end
 
+  def flush_wt
+    @dict={}
+    @dict_tree={}
+  end
+
   def save_word_to_db word, freq, attr
     w=Word.new
     w.name = word

@@ -1,13 +1,13 @@
+$mongo=true
 require 'sinatra'
 require './chop.rb'
 
 
-dict=Dict.new
-dict.load_from_file './dict.txt'
+$dict=Dict.new
+$dict.load_from_mongo 
 
 
-$chop = Chopper.new dict
-#res = chop.chop ARGV[0]
+$chop = Chopper.new $dict
 
 
 get '/hi' do
@@ -20,3 +20,9 @@ get '/chop/:word' do |w|
   puts res
   res.to_s
 end 
+
+get '/reloaddb' do
+  $dict.flush_wt
+  $dict.load_from_mongo
+  $chop= Chopper.new $dict
+end
