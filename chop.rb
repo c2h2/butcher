@@ -5,7 +5,12 @@ $min_word_len = 0  #minmal match length for a word, 0 = match anything.
 $mongo ||= false
 $debug ||= false
 
-require_relative "./www/app/models/word.rb" if $mongo
+if $mongo
+  require 'mongoid'
+  Mongoid.load!("www/config/mongoid.yml", :development)
+  require_relative "./www/app/models/word.rb"
+  
+end
 
 #data structure used here is ruby hash
 class Dict
@@ -23,37 +28,42 @@ class Dict
     w.save
     puts word if $debug
   end
+
+  def load_from_mongo
+    Word.each do |w|
+      build_tree w.name, w.freq, w.attr
+    end
+  end
+  
+  def build_tree word, freq, attr
+    @dict[word]=[freq, attr]
+    #make the dict tree, by walking down the branch
+    wordlen =  word.length
+    wordindex = 0
+    dc = @dict_tree
+     
+    while wordlen > wordindex
+      char = word[wordindex]
+      if dc[char].nil?
+        dc[char] = {} #new branch
+        dc[char]["_"]=[freq, attr]
+      else
+        dc = dc[char] #walk the old branch
+      end
+      wordindex += 1
+    end
+  end
   
   def load_from_file fn
     file = File.new(fn, "r")
-    cnt = 0
     while (line = file.gets)
       elems = line.split(" ")
       word = elems[0] #first is word itself
       freq = elems[1] #2nd is freq of appearnce.
       attr = elems[2] #3rd is word attribute.
-      @dict[word]=[freq, attr]
-      save_word_to_db(word, freq, attr) if $mongo
-
-      #make the dict tree, by walking down the branch
       next if word.nil?
-      wordlen =  word.length
-      wordindex = 0
-      dc = @dict_tree
-     
-      
-      while wordlen > wordindex
-        char = word[wordindex]
-        if dc[char].nil?
-          dc[char] = {} #new branch
-          dc[char]["_"]=[freq, attr]
-        else
-          dc = dc[char] #walk the old branch
-        end
-        wordindex += 1
-      end
-
-      cnt += 1
+      save_word_to_db(word, freq, attr) if $mongo
+      build_tree(word, freq, attr)
     end
   end
 
