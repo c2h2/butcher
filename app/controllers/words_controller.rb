@@ -4,11 +4,29 @@ class WordsController < ApplicationController
   # GET /words
   # GET /words.json
   def index
-    if params[:sort] == "freq_asc"
-      @words = Word.asc("freq").page(params[:page]).per(100)
-    else
-      @words = Word.desc("freq").page(params[:page]).per(100)
+    @page_size = 200
+
+    @range_start = params[:page].nil? ? 0 : params[:page].to_i * @page_size
+    @range_end = @range_start + @page_size
+  
+    words = Word.all
+
+    if !params[:attr].nil?
+      words = words.where(:attr => params[:attr])
     end
+
+    if params[:sort] == "freq_asc"
+      @words = words.asc("freq").page(params[:page]).per(@page_size)
+    elsif params[:sort] == "freq_dsc"
+      @words = words.desc("freq").page(params[:page]).per(@page_size)
+    elsif params[:sort] == "attr_asc"
+      @words = words.asc("attr").page(params[:page]).per(@page_size)
+    elsif params[:sort] == "attr_dsc"
+      @words = words.desc("attr").page(params[:page]).per(@page_size)
+    else
+      @words = words.desc("freq").page(params[:page]).per(@page_size)
+    end
+    
   end
 
   # GET /words/1

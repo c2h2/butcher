@@ -1,6 +1,6 @@
 class Word
   include Mongoid::Document
-  #include Mongoid::Datetime
+  include Mongoid::Timestamps
   field :name
   field :freq, type: Integer
   field :attr
@@ -8,6 +8,7 @@ class Word
   field :attr2, type: String, default: ""
 
   index :freq => 1
+  index :name => 1
 
   validates :name, :presence => true
   validates :freq, :presence => true
