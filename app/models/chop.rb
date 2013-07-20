@@ -4,12 +4,12 @@ require 'pp'
 $min_word_len = 0  #minmal match length for a word, 0 = match anything.
 $mongo ||= false
 $debug ||= false
+$db_file ||="config/mongoid.yml"
 
 if $mongo
   require 'mongoid'
-  Mongoid.load!("www/config/mongoid.yml", :development)
-  require_relative "./www/app/models/word.rb"
-  
+  Mongoid.load!($db_file, :development)
+  require_relative "./word.rb"
 end
 
 #data structure used here is ruby hash
@@ -23,6 +23,10 @@ class Dict
   def flush_wt
     @dict={}
     @dict_tree={}
+  end
+
+  def get_dict_word word
+    @dict[word]
   end
 
   def save_word_to_db word, freq, attr
