@@ -1,6 +1,5 @@
 .idea
 .bundle
-www/tmp/cache/assets/development
-www/tmp
-www/log/*.log
-*.log
+tmp/cache/assets/development
+tmp
+log/*.log
