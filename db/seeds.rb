@@ -9,7 +9,7 @@ Word.destroy_all
 puts "Done flushing old db, loading dict #{db_file}, Time now = #{start_time}"
 require_relative "../app/models/chop.rb"
 dict=Dict.new
-dict.load_from_file db_file
+dict.load_from_file db_file, false
 puts "Done, loaded dict db. Cost #{Time.now - start_time} seconds."
 
 

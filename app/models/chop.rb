@@ -63,7 +63,7 @@ class Dict
     end
   end
   
-  def load_from_file fn
+  def load_from_file fn, do_build_tree=true
     file = File.new(fn, "r")
     while (line = file.gets)
       elems = line.split(" ")
@@ -72,7 +72,7 @@ class Dict
       attr = elems[2] #3rd is word attribute.
       next if word.nil?
       save_word_to_db(word, freq, attr) if $mongo
-      build_tree(word, freq, attr)
+      build_tree(word, freq, attr) if do_build_tree
     end
   end
 
