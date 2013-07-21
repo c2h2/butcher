@@ -14,6 +14,7 @@ def reload_dicts
   puts "Done loading db, elasped #{(Time.now - t0).to_i} seconds."
 end
 
+set :bind, '0.0.0.0'
 
 reload_dicts #get new dicts
 
