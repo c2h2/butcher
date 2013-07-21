@@ -141,9 +141,9 @@ class Chopper
           else
             #found a word, and save output
             if !temp_word.nil?
-              found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
-              cr.line_after = cr.line_after + "|" + line[temp_index, temp_length]
-              i = i + wordlen - 1
+              found_words << temp_word; words_index << temp_index; words_length << temp_length
+              cr.words << temp_word; cr.line_after = cr.line_after + "|" + line[temp_index, temp_length]
+              i = i + wordlen - 1 ; temp_word = nil
               break
             else
               #bad luck nothing found
@@ -151,13 +151,13 @@ class Chopper
           end
         else  # not match a word, if match a tree, yes -> 
           if mt
-            #not match a word, but a tree, we inc the word length
+            #not match a word, but match a tree, we inc the word length
           else
             #not a tree, not a word
             if !temp_word.nil?
-              found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
-              cr.line_after = cr.line_after + "|" + line[temp_index, temp_length]
-              i = i + temp_length - 1
+              found_words << temp_word; words_index << temp_index; words_length << temp_length
+              cr.words << temp_word; cr.line_after = cr.line_after + "|" + line[temp_index, temp_length]
+              i = i + temp_length - 1 ; temp_word = nil
               break
             else
               #bad luck nothing found
@@ -173,8 +173,9 @@ class Chopper
     
       #end of a line, take care of last word if have
       if !temp_word.nil?
-        found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
-         cr.line_after = cr.line_after + "|" + line[temp_index, temp_length]
+        found_words << temp_word; words_index << temp_index; words_length << temp_length
+        cr.words << temp_word; cr.line_after = cr.line_after + "|" + line[temp_index, temp_length]
+        temp_word = nil
         break
       end
       ##
@@ -188,7 +189,7 @@ class Chopper
       @words_array[words_index[i]] << words_length[i]
     end
     @words_array
-    cr.words = found_words.clone
+
     cr
   end
 
