@@ -12,6 +12,15 @@ if $mongo
   require_relative "./word.rb"
 end
 
+class ChopResult
+  attr_accessor :words, :line_after
+
+  def initialize
+    @words=[]
+    @line_after=""
+  end
+end
+
 #data structure used here is ruby hash
 class Dict
   attr_accessor :dict, :dict_tree
@@ -118,6 +127,8 @@ class Chopper
     temp_word=nil
     temp_length=0
 
+    cr = ChopResult.new
+
     while i < line.length
       while i + wordlen <= line.length  #break if try_word over the boundry of a line
         try_word=line[i, wordlen]
@@ -131,6 +142,7 @@ class Chopper
             #found a word, and save output
             if !temp_word.nil?
               found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
+              cr.line_after = cr.line_after + "|" + line[temp_index, temp_length]
               i = i + wordlen - 1
               break
             else
@@ -144,10 +156,12 @@ class Chopper
             #not a tree, not a word
             if !temp_word.nil?
               found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
+              cr.line_after = cr.line_after + "|" + line[temp_index, temp_length]
               i = i + temp_length - 1
               break
             else
               #bad luck nothing found
+              cr.line_after = cr.line_after + line[i]
               break #no word, no tree #orpahn char. #TODO take care orphan
             end
           end
@@ -160,6 +174,7 @@ class Chopper
       #end of a line, take care of last word if have
       if !temp_word.nil?
         found_words << temp_word; words_index << temp_index; words_length << temp_length; temp_word = nil
+         cr.line_after = cr.line_after + "|" + line[temp_index, temp_length]
         break
       end
       ##
@@ -173,8 +188,8 @@ class Chopper
       @words_array[words_index[i]] << words_length[i]
     end
     @words_array
-
-    found_words
+    cr.words = found_words.clone
+    cr
   end
 
   def reassemble_left
